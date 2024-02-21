@@ -27,11 +27,19 @@ namespace Jornada_Milhas.Services
             await _destinoContext.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Destino>> GetByNameAsync(string name)
+        {
+           return await _destinoContext.Destino
+                .Where(x => x.Nome.Contains(name))
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<Destino>> GetListAsync(int skip, int take)
         {
             return await _destinoContext.Destino
             .Skip(skip)
             .Take(take)
+            .Where(x => !x.Deleted)
             .ToListAsync();
         }
 

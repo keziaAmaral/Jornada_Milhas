@@ -36,6 +36,14 @@ namespace Jornada_Milhas.Controllers
             return Ok(destinos);
         }
 
+        [HttpGet]
+        [Route("nome")]
+        public async Task<IActionResult> GetByNameAsync([FromRoute] string name)
+        {
+            var destino = await _destinosService.GetByNameAsync(name);
+            return Ok(destino);
+        }
+
         [HttpPut]
         public async Task<IActionResult> UpdateAsync(Destino destino)
         {

@@ -25,8 +25,16 @@ namespace Jornada_Milhas.Controllers
         [HttpGet]
         public async Task<IActionResult> GetListAsync([FromQuery] int skip = 0, [FromQuery] int take = 50)
         {
-            var depoimentos = await _depoimentoService.GetListAsync(skip, take);
-            return Ok(depoimentos);
+            try
+            {
+                var depoimentos = await _depoimentoService.GetListAsync(skip, take);
+                return Ok(depoimentos);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
         }
 
         [Route("Home")]

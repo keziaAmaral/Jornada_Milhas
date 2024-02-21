@@ -1,5 +1,6 @@
 using Jornada_Milhas.Data;
 using Jornada_Milhas.Services;
+using Jornada_Milhas.Services.Pagamentos;
 using Microsoft.EntityFrameworkCore;
 
 internal class Program
@@ -8,34 +9,27 @@ internal class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        ConfigureDatabase(builder);
+        builder.AddContext();
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        ConfigureServices(builder.Services);
+        builder.Services.ConfigureServices();
 
         BuildApp(builder);
-    }
-
-    private static void ConfigureDatabase(WebApplicationBuilder builder)
-    {
-        var connectionString = builder.Configuration.GetConnectionString("DatabaseConnection");
-
-        builder.Services.AddDbContext<DepoimentoContext>(
-            options => options.UseSqlServer(connectionString));
-
-        builder.Services.AddDbContext<DestinoContext>(
-            options => options.UseSqlServer(connectionString));
-
-        builder.Services.AddScoped<IDepoimentoContext, DepoimentoContext>();
-        builder.Services.AddScoped<IDestinoContext, DestinoContext>();
     }
 
     private static void BuildApp(WebApplicationBuilder builder)
     {
         var app = builder.Build();
+
+        app.UseRouting();
+
+        app.UseCors(options =>
+        options.WithOrigins("http://localhost:4200")
+        .AllowAnyHeader()
+        .AllowAnyMethod());
 
         if (app.Environment.IsDevelopment())
         {
@@ -52,9 +46,5 @@ internal class Program
         app.Run();
     }
 
-    private static void ConfigureServices(IServiceCollection services)
-    {
-        services.AddScoped<IDepoimentoService, DepoimentoService>();
-        services.AddScoped<IDestinosService, DestinoService>();
-    }
+
 }

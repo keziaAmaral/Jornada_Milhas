@@ -52,6 +52,23 @@ namespace JornadaMIlhasTestes.Controllers
         }
 
         [Fact]
+        public async Task Should_GetByName_Returns_Destino_With_Same_Name()
+        {
+            var name = "SP";
+            _destino.Nome = name;
+
+            var destinoList = new List<Destino> { _destino };
+
+            _destinosService
+                .Setup(x => x.GetByNameAsync(name))
+                .ReturnsAsync(destinoList);
+
+            var result = await _subject.GetByNameAsync(name) as OkObjectResult;
+
+            Assert.Equal(StatusCodes.Status200OK, result?.StatusCode);
+        }
+
+        [Fact]
         public async Task Should_Delete_Depoimento()
         {
             var result = await _subject.DeleteAsync(_destino.Id) as OkResult; ;

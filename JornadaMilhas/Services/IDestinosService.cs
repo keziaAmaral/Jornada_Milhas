@@ -8,5 +8,6 @@ namespace Jornada_Milhas.Services
         Task AddAsync(Destino destino);
         Task DeleteAsync(int id);
         Task UpdateAsync(Destino destino);
+        Task<IEnumerable<Destino>> GetByNameAsync(string name);
     }
 }

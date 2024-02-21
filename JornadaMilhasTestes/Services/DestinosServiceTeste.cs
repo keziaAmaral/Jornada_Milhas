@@ -91,6 +91,28 @@ namespace JornadaMIlhasTestes.Services
         }
 
         [Fact]
+        public async Task GetByName_Should_Return_Destino_List()
+        {
+            var destino = new Destino { Id = 5, Nome = "Sao Paulo" };
+            var destino2 = new Destino { Id = 8, Nome = "Minas Gerais" };
+
+            var name = "Minas";
+
+            var destinoList = new List<Destino> { destino, destino2 }.AsQueryable();
+
+            SetupDbSet(_mockDbSet, destinoList);
+
+            _destinoContext
+                .SetupGet(x => x.Destino)
+                .Returns(_mockDbSet.Object);
+
+            var result = await _subject.GetByNameAsync(name);
+
+            Assert.True(result.Where(x => x.Id == 8).Any());
+            Assert.False(result.Where(x => x.Id == 5).Any());
+        }
+
+        [Fact]
         public async Task Update_Should_Return_Atualizar_Destino()
         {
             var destino = new Destino
